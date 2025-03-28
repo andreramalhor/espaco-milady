@@ -12,7 +12,8 @@
         "laravel/reverb": "^1.4",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10.1",
-        "livewire/livewire": "^3.0"
+        "livewire/livewire": "^3.0",
+        "twilio/sdk": "^8.4"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.15",

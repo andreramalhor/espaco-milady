@@ -67,6 +67,8 @@ use App\Livewire\Conferencias;
 
 use App\Events\CanalPublico;
 use App\Events\CanalPrivado;
+
+use App\Http\Controllers\TwilioController;
 /*
 |--------------------------------------------------------------------------
 | BROADCASTINGS
@@ -102,6 +104,7 @@ Route::get('/loginUsingId/{id}', function ($id) {
 |
 */
 Route::get('/form-replicator', FormReplicator::class);
+Route::get('/teste-whatsapp', [TwilioController::class, 'sendWhatsAppMessage']);
 
 Route::middleware([
     'auth:sanctum',
