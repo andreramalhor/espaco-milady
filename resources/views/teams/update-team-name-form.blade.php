@@ -13,11 +13,11 @@
             <x-label value="{{ __('Team Owner') }}" />
 
             <div class="flex items-center mt-2">
-                <img class="size-12 rounded-full object-cover" src="{{ $team->owner->profile_photo_url }}" alt="{{ $team->owner->name }}">
+                <img class="size-12 rounded-full object-cover" src="{{ optional($team->owner)->profile_photo_url ?? 'https://ui-avatars.com/api/?name=espaco%20milady' }}" alt="{{ optional($team->owner)->name ?? 'Espaco Milady' }}">
 
                 <div class="ms-4 leading-tight">
-                    <div class="text-gray-900 dark:text-white">{{ $team->owner->name }}</div>
-                    <div class="text-gray-700 dark:text-gray-300 text-sm">{{ $team->owner->email }}</div>
+                    <div class="text-gray-900 dark:text-white">{{ optional($team->owner)->name ?? 'Espaco Milady' }}</div>
+                    <div class="text-gray-700 dark:text-gray-300 text-sm">{{ optional($team->owner)->email ?? 'contato@espacomilady.com.br' }}</div>
                 </div>
             </div>
         </div>

@@ -1,0 +1,138 @@
+<?php
+
+namespace App\Models\Catalogo;
+
+use Illuminate\Database\Eloquent\Model;
+
+use Illuminate\Database\Eloquent\SoftDeletes;         //Se for usar coluna DELETED_AT no banco de dados
+use Illuminate\Notifications\Notifiable;              //Se for usar Notifiable (ainda nao sei do q se trata)
+use Carbon\Carbon;                                    //Se for usar tempo, timestamp, fuso-horário, função NOW
+
+use App\Models\Atendimento\Pessoa;
+use App\Models\PDV\Caixa;
+use App\Models\Catalogo\SaidaDetalhe;
+use App\Models\Catalogo\SaidaPagamento;
+
+class Saida extends Model
+{
+    use SoftDeletes;                                    //Se for usar coluna DELETED_AT no banco de dados
+    use Notifiable;                                 		//Se for usar Notifiable (ainda nao sei do q se trata)
+
+    public $timestamps    = true;
+    protected $table      = 'est_saidas';
+    protected $primaryKey = 'id';
+    protected $fillable   = [
+        'tipo',
+        'id_caixa',
+        'id_usuario',
+        'id_fornecedor',
+        'qtd_produtos',
+        'somatorio_produtos',
+        'vlr_prod_serv',
+        'vlr_negociados',
+        'vlr_dsc_acr',
+        'vlr_final',
+        'status',
+        'dt_saida',
+        'num_saida',
+        'num_pedido',
+        'num_nf',
+        'vlr_total',
+        'vlr_desconto_total',
+        'vlr_frete_total',
+        'obs',
+        'pedido_por',
+        'conferido_por',
+    ];
+    protected $appends = [
+        'fornecedor',
+    ];
+
+    // AUXILIARES              ===========================================================================================
+    public static function pesquisar($pesquisa)
+    {
+        return empty($pesquisa)
+                    ? static::query()
+                    : static::query()->where('nome', 'LIKE', '%'.$pesquisa.'%')
+                    ->orWhere('id', 'LIKE', '%'.$pesquisa.'%');
+    }
+
+    // ================================================================================================================= RELACIONAMENTOS
+    public function ysfyhzfsfarfdha() //fornecedor
+    {
+        return $this->belongsTo(Pessoa::class, 'id_fornecedor', 'id')->withTrashed();
+    }
+
+    public function lkerwiucqwbnlks()
+    {
+        return $this->hasMany(SaidaDetalhe::class, 'id_saida', 'id');
+    }
+
+    public function AtdPessoasFornecedoresSaidas()
+    {
+        return $this->belongsTo(Pessoa::class, 'id_fornecedor', 'id')->withTrashed();
+    }
+
+    public function CatalogoCaixasSaidas()
+    {
+        return $this->belongsTo(Caixa::class, 'id_caixa', 'id');
+    }
+
+    public function CatalogoSaidasDetalhesProdutos()
+    {
+        return $this->hasMany(SaidaDetalhe::class, 'id_saida', 'id');
+    }
+
+    public function CatalogoSaidasPagamentosSaidas()
+    {
+        return $this->hasMany(SaidaPagamento::class, 'id_saida', 'id');
+    }
+
+    public function AtdPessoasVendedores()
+    {
+        return $this->belongsTo(Pessoa::class, 'id_vendedor', 'id');
+    }
+
+    // MUTATORS         ===========================================================================================
+    public function setVlrProdServAttribute($value)
+    {
+        $this->attributes['vlr_prod_serv'] = str_replace(',', '.',str_replace('.', '',str_replace('R$ ', '', $value)));
+    }
+
+    public function setVlrNegociadosAttribute($value)
+    {
+        $this->attributes['vlr_negociados'] = str_replace(',', '.',str_replace('.', '',str_replace('R$ ', '', $value)));
+    }
+
+    public function setVlrDscAcrAttribute($value)
+    {
+        $this->attributes['vlr_dsc_acr'] = str_replace(',', '.',str_replace('.', '',str_replace('R$ ', '', $value)));
+    }
+
+    public function setVlrFinalAttribute($value)
+    {
+        $this->attributes['vlr_final'] = str_replace(',', '.',str_replace('.', '',str_replace('R$ ', '', $value)));
+    }
+
+    public function setVlrCustoAttribute($value)
+    {
+        $this->attributes['vlr_custo'] = str_replace(',', '.',str_replace('.', '',str_replace('R$ ', '', $value)));
+    }
+
+    // ================================================================================================================= MÉTODOS
+
+    public function getFornecedorAttribute()
+    {
+        return $this->ysfyhzfsfarfdha->nome ?? '';
+    }
+
+    // ================================================================================================================= ATRIBUTOS (Nomes)
+    // AUXILIARES       ===========================================================================================
+    public static function procurar($pesquisa)
+    {
+        return empty($pesquisa)
+            ? static::query()
+            : static::query()->where('nome', 'LIKE', '%'.$pesquisa.'%')
+            ->orWhere('id', 'LIKE', '%'.$pesquisa.'%');
+    }
+}
